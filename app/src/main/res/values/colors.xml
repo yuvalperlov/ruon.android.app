@@ -1,0 +1,6 @@
+<resources>
+    <color name="app_green">#89af56</color>
+    <color name="app_minor">#f2c200</color>
+    <color name="app_major">#ed9c33</color>
+    <color name="app_critical">#cd3301</color>
+</resources>
