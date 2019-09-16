@@ -20,7 +20,7 @@ import ruon.android.util.UserLog;
  */
 public class GcmRegisterWS extends NetworkTask {
 
-public static final String TAG = GcmRegisterWS.class.getSimpleName();
+    public static final String TAG = GcmRegisterWS.class.getSimpleName();
     String email;
     String password;
     String mName;
@@ -29,7 +29,7 @@ public static final String TAG = GcmRegisterWS.class.getSimpleName();
     NetworkResult result;
     private static final String UNKNOWN_ERROR = "Unknown error";
 
-    public GcmRegisterWS(String email, String password,String name, String token, NetworkTaskListener listener){
+    public GcmRegisterWS(String email, String password, String name, String token, NetworkTaskListener listener) {
         this.email = email;
         this.password = password;
         this.mName = URLEncoder.encode(name);
@@ -56,14 +56,14 @@ public static final String TAG = GcmRegisterWS.class.getSimpleName();
             String line = EntityUtils.toString(httpResponse.getEntity());
             UserLog.i(TAG, "Response - " + line);
             UserLog.i(TAG, "Response code - " + httpResponse.getStatusLine().getStatusCode());
-            if(httpResponse.getStatusLine().getStatusCode() == 200){
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 result = NetworkResult.OK;
-            }else{
+            } else {
                 result = NetworkResult.ERROR;
             }
             return line;
             // handle response here...
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             // handle exception here
             ex.printStackTrace();
             result = NetworkResult.ERROR;
@@ -74,8 +74,8 @@ public static final String TAG = GcmRegisterWS.class.getSimpleName();
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        if(!isCancelled()){
-            if(mListener != null){
+        if (!isCancelled()) {
+            if (mListener != null) {
                 mListener.OnResult(result, o);
             }
         }

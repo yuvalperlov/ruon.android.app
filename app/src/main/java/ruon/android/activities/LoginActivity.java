@@ -34,7 +34,7 @@ import ruon.android.util.NetworkUtils;
 import ruon.android.util.UserLog;
 
 
-public class LoginActivity extends WorkerActivity implements NetworkTask.NetworkTaskListener{
+public class LoginActivity extends WorkerActivity implements NetworkTask.NetworkTaskListener {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     public static final String PASSWORD = "Password";
@@ -65,22 +65,22 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
 
         mGcmWaitCounter = 0;
         mAlertMessage.setText("");
-        try{
+        try {
             pleaseabilityCheck();
             showProgress();
             mTask = new LoginWS(mEmail.getText().toString(), mPassword.getText().toString(), this);
             mTask.execute();
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             InfoDialog.showDialog(this, e.getMessage());
         }
     }
 
-    private void pleaseabilityCheck() throws IllegalArgumentException{
-        if(!NetworkUtils.isNetworkAvailable(this)){
+    private void pleaseabilityCheck() throws IllegalArgumentException {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
             throw new IllegalArgumentException(getString(R.string.network_error));
-        }else if(TextUtils.isEmpty(mEmail.getText())){
+        } else if (TextUtils.isEmpty(mEmail.getText())) {
             throw new IllegalArgumentException(getString(R.string.empty_email_title));
-        } else if(TextUtils.isEmpty(mPassword.getText())){
+        } else if (TextUtils.isEmpty(mPassword.getText())) {
             throw new IllegalArgumentException(getString(R.string.empty_password_title));
         }
     }
@@ -104,7 +104,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
         String pushToken = MyPreferenceManager.getGcmToken(this);
         UserLog.i(TAG, "Token - " + token);
         UserLog.i(TAG, "PushToken - " + pushToken);
-        if(!TextUtils.isEmpty(token)){
+        if (!TextUtils.isEmpty(token)) {
             Intent mainScreen = new Intent(this, MainActivity.class);
             startActivity(mainScreen);
             finish();
@@ -123,9 +123,9 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
                                          startActivity(i);
                                      }
                                  },
-                25,40 , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                25, 40, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannablecontent.setSpan(new ForegroundColorSpan(Color.parseColor("#88b057")),
-                25,40 , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                25, 40, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mAddAcciountHint.setMovementMethod(LinkMovementMethod.getInstance());
         mAddAcciountHint.setText(spannablecontent);
         mVersionName.setText(getVersionName());
@@ -134,11 +134,11 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
 
     @Override
     protected void onPause() {
-        if(mTask != null){
+        if (mTask != null) {
             hideProgress();
             mTask.cancel(true);
         }
-        if(mHandler != null){
+        if (mHandler != null) {
             hideProgress();
             mHandler.removeCallbacks(mGcmChecker);
         }
@@ -148,10 +148,10 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
     @Override
     public void OnResult(NetworkResult result, Object o) {
         mToken = (String) o;
-        if(result == NetworkResult.ERROR){
+        if (result == NetworkResult.ERROR) {
             hideProgress();
             mAlertMessage.setText(mToken);
-        }else{
+        } else {
             UserLog.i(TAG, "Token - " + mToken);
             Intent gcmRegister = new Intent(this, GcmRegisterService.class);
 
@@ -174,16 +174,16 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
         public void run() {
             boolean isRegistered = MyPreferenceManager.isGcmRegisteredOnOurServer(LoginActivity.this);
             mGcmWaitCounter++;
-            if(isRegistered){
+            if (isRegistered) {
                 hideProgress();
                 MyPreferenceManager.saveToken(LoginActivity.this, mToken);
                 Intent mainScreen = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(mainScreen);
                 finish();
-            } else{
-                if(mGcmWaitCounter < 13){
+            } else {
+                if (mGcmWaitCounter < 13) {
                     mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
-                }else{
+                } else {
                     hideProgress();
                     mAlertMessage.setText(getString(R.string.authentication_error));
                 }
@@ -193,9 +193,9 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
 
     public String getVersionName() {
         String version = null;
-        try{
+        try {
             version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        }catch (PackageManager.NameNotFoundException e){
+        } catch (PackageManager.NameNotFoundException e) {
             return getString(R.string.app_name);
         }
 

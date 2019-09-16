@@ -32,7 +32,7 @@ import ruon.android.util.TheAlarm;
 import ruon.android.util.UserLog;
 
 public class MainActivity extends WorkerActivity implements NetworkTask.NetworkTaskListener, AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener{
+        SwipeRefreshLayout.OnRefreshListener {
 
     private final String TAG = MainActivity.class.getSimpleName();
     public static final String NOTIFICATION_EVENT = "com.ruon.app.NotificationEvent";
@@ -61,7 +61,7 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.i(TAG, "OnNotificationRefresh");
-                if(NetworkUtils.isNetworkAvailable(MainActivity.this)) {
+                if (NetworkUtils.isNetworkAvailable(MainActivity.this)) {
                     refresh();
                 }
             }
@@ -72,7 +72,7 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, filter);
-        if(mShouldRefresh){
+        if (mShouldRefresh) {
             showProgress();
             mList.setAdapter(null);
             refresh();
@@ -89,12 +89,12 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
         startActivityForResult(alarmDetails, 11);
     }
 
-    private void refresh(){
-        if(NetworkUtils.isNetworkAvailable(this)){
+    private void refresh() {
+        if (NetworkUtils.isNetworkAvailable(this)) {
             mTask = new AlarmsWS(MyPreferenceManager.getToken(this), this);
             mTask.execute();
             mNoAlarmsLabel.setVisibility(View.GONE);
-        }else{
+        } else {
             mList.setAdapter(null);
             mNoAlarmsLabel.setText(getString(R.string.network_error));
             mNoAlarmsLabel.setBackgroundColor(getResources().getColor(R.color.app_critical));
@@ -131,7 +131,7 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
 
     @Override
     protected void onPause() {
-        if(mTask != null){
+        if (mTask != null) {
             hideProgress();
             mTask.cancel(true);
         }
@@ -159,7 +159,7 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
     public void OnResult(NetworkResult result, Object o) {
         mRefresher.setRefreshing(false);
         hideProgress();
-        if(result == NetworkResult.OK) {
+        if (result == NetworkResult.OK) {
             if (o != null) {
                 ArrayList<TheAlarm> items = (ArrayList<TheAlarm>) o;
                 UserLog.i(TAG, "result - " + items.size());
@@ -174,8 +174,8 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
                     mList.setAdapter(getAdapter());
                 }
             }
-        }else{
-            String message = (String)o;
+        } else {
+            String message = (String) o;
             UserLog.i(TAG, "Error message - " + message);
             mNoAlarmsLabel.setText(message);
             mNoAlarmsLabel.setBackgroundColor(getResources().getColor(R.color.app_critical));
@@ -189,8 +189,8 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
         mShouldRefresh = false;
     }
 
-    private AlarmAdapter getAdapter(){
-        if(mAdapter == null){
+    private AlarmAdapter getAdapter() {
+        if (mAdapter == null) {
             mAdapter = new AlarmAdapter(this);
         }
         return mAdapter;
