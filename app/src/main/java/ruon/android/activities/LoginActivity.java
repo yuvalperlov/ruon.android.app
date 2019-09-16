@@ -28,7 +28,7 @@ import ruon.android.model.MyPreferenceManager;
 import ruon.android.model.NetworkResult;
 import ruon.android.net.LoginWS;
 import ruon.android.net.NetworkTask;
-import ruon.android.services.GcmRegisterService;
+import ruon.android.services.TokenRegistrator;
 import ruon.android.util.InfoDialog;
 import ruon.android.util.NetworkUtils;
 import ruon.android.util.UserLog;
@@ -36,9 +36,6 @@ import ruon.android.util.UserLog;
 
 public class LoginActivity extends WorkerActivity implements NetworkTask.NetworkTaskListener {
     private static final String TAG = LoginActivity.class.getSimpleName();
-
-    public static final String PASSWORD = "Password";
-    public static final String USERNAME = "Username";
 
     @InjectView(R.id.email)
     EditText mEmail;
@@ -153,12 +150,12 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
             mAlertMessage.setText(mToken);
         } else {
             UserLog.i(TAG, "Token - " + mToken);
-            Intent gcmRegister = new Intent(this, GcmRegisterService.class);
+
+            String username = mEmail.getText().toString().trim();
+            String password = mPassword.getText().toString().trim();
 
             // Register for push notifications and wait for a result
-            gcmRegister.putExtra(USERNAME, mEmail.getText().toString().trim());
-            gcmRegister.putExtra(PASSWORD, mPassword.getText().toString().trim());
-            startService(gcmRegister);
+            new TokenRegistrator(username, password, this).registerFirebaseMessagingToken();
             mHandler = new Handler();
             mHandler.postDelayed(mGcmChecker, 2 * DateUtils.SECOND_IN_MILLIS);
         }
