@@ -6,13 +6,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.ruon.app.R;
 
 import org.json.JSONObject;
@@ -24,8 +26,8 @@ import ruon.android.util.UserLog;
 /**
  * Created by Ivan on 6/30/2015.
  */
-public class MyGcmService extends GcmListenerService {
-    private static final String TAG = MyGcmService.class.getSimpleName();
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
     private static final String ALARM_KEY = "alarm";
     private static final String TITLE_KEY = "title";
@@ -33,10 +35,9 @@ public class MyGcmService extends GcmListenerService {
 
     public static int sNotificationId;
 
-
     @Override
-    public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString(ALARM_KEY);
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        String message = remoteMessage.getData().get(ALARM_KEY);
         JSONObject rawAlarm = null;
         try{
             rawAlarm = new JSONObject(message);
