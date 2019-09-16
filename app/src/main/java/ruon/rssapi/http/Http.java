@@ -1,6 +1,6 @@
 package ruon.rssapi.http;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -33,8 +33,8 @@ public class Http {
         }
     }
 
-    public static void get(ResponseListener responseListener, String uri, Object... params) {
-        for (int i = 0; i < params.length; ++i) {
+    public static void get(ResponseListener responseListener, String uri, Object ... params) {
+        for (int i=0;i<params.length;++i) {
             params[i] = urlencode(params[i].toString());
         }
         uri = String.format(uri, params);

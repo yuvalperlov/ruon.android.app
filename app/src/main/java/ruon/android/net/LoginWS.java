@@ -9,7 +9,7 @@ import ruon.rssapi.API;
  */
 public class LoginWS extends NetworkTask {
 
-    public static final String TAG = LoginWS.class.getSimpleName();
+public static final String TAG = LoginWS.class.getSimpleName();
     String email;
     String password;
     String rawResult;
@@ -17,7 +17,7 @@ public class LoginWS extends NetworkTask {
     NetworkResult result;
     private static final String UNKNOWN_ERROR = "Unknown error";
 
-    public LoginWS(String email, String password, NetworkTaskListener listener) {
+    public LoginWS(String email, String password, NetworkTaskListener listener){
         this.email = email;
         this.password = password;
         mListener = listener;
@@ -57,7 +57,7 @@ public class LoginWS extends NetworkTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        if (!isCancelled()) {
+        if(!isCancelled()){
             mListener.OnResult(result, o);
         }
     }

@@ -18,8 +18,8 @@ public class AlarmsWS extends NetworkTask {
     NetworkTaskListener mListener;
     NetworkResult result;
 
-    public AlarmsWS(String token, NetworkTaskListener listener) {
-        this.token = token;
+    public AlarmsWS(String token,NetworkTaskListener listener){
+        this.token  = token;
         mListener = listener;
     }
 
@@ -31,7 +31,7 @@ public class AlarmsWS extends NetworkTask {
     @Override
     protected Object doInBackground(Object[] objects) {
 
-        API.alarms(token, false, new API.FetchAlarmsListener() {
+        API.alarms(token , false, new API.FetchAlarmsListener() {
             @Override
             public void error(Exception e) {
                 // Handle alarms fetch error
@@ -52,7 +52,7 @@ public class AlarmsWS extends NetworkTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        if (!isCancelled()) {
+        if(!isCancelled()){
             mListener.OnResult(result, o);
         }
     }

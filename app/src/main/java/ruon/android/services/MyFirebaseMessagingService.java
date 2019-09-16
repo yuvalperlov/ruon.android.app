@@ -39,7 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         String message = remoteMessage.getData().get(ALARM_KEY);
         JSONObject rawAlarm = null;
-        try {
+        try{
             rawAlarm = new JSONObject(message);
             String title = rawAlarm.optString(TITLE_KEY).trim();
             String sound = rawAlarm.getString(SOUND_KEY).trim();
@@ -49,10 +49,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
              * that a message was received.
              */
             sendNotification(title, sound);
-        } catch (Exception e) {
+        }catch (Exception e){
             Log.e(TAG, "Could not parse GCM message - " + message);
             e.printStackTrace();
-            return;
+            return ;
         }
     }
 
@@ -66,9 +66,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                         .setContentText(title);
         String sound = getSound(soundRaw);
-        if (sound != null) {
+        if(sound != null){
             mBuilder.setSound(Uri.parse(sound));
-        } else {
+        }else{
             mBuilder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
         }
 
@@ -101,14 +101,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         sendBroadcast(intent);
     }
 
-    public String getSound(String soundRaw) {
-        if (TextUtils.isEmpty(soundRaw)) {
+    public String getSound(String soundRaw){
+        if(TextUtils.isEmpty(soundRaw)){
             return null;
         }
         String path = null;
-        try {
+        try{
             TheAlarm.Sound sound = TheAlarm.Sound.valueOf(soundRaw);
-            switch (sound) {
+            switch (sound){
                 case dcagd:
                     path = "" + R.raw.dcagd;
                     break;
@@ -188,13 +188,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     path = "" + R.raw.umswp;
                     break;
             }
-            if (TextUtils.isEmpty(path)) {
+            if(TextUtils.isEmpty(path)){
                 return null;
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e){
             Log.e(TAG, "Unknown sound");
             return null;
         }
-        return "android.resource://" + getPackageName() + "/" + path;
+        return "android.resource://" + getPackageName() + "/" + path ;
     }
 }

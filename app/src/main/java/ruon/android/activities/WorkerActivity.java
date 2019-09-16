@@ -14,7 +14,7 @@ public abstract class WorkerActivity extends AppCompatActivity {
 
     public void showProgress() {
         LinearLayout progress = findViewById(R.id.progress_bar);
-        if (progress != null) {
+        if(progress != null){
             progress.setVisibility(View.VISIBLE);
         }
     }

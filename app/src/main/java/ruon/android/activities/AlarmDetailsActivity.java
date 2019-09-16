@@ -57,15 +57,15 @@ public class AlarmDetailsActivity extends AppCompatActivity {
     }
 
     private void updateValues() {
-        if (mAlarm == null) {
+        if(mAlarm == null) {
             finish();
-        } else {
+        } else{
             getSupportActionBar().setTitle(mAlarm.getAgent());
             mAlarmSeverity.setText(mAlarm.getSeverity().toString());
             mAlarmTimestamp.setText(mAlarm.getDate());
             mAlarmAgent.setText(mAlarm.getResource());
             mAlarmDetail.setText(mAlarm.getGuid() + "\n\n" + mAlarm.getDescription());
-            switch (mAlarm.getSeverity()) {
+            switch (mAlarm.getSeverity()){
                 case Minor:
                     mSeverityContainer.setBackgroundColor(getResources().getColor(R.color.app_minor));
                     break;
@@ -86,7 +86,7 @@ public class AlarmDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 return true;
