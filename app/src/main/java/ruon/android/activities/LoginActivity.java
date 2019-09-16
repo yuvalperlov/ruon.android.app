@@ -17,12 +17,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ruon.app.R;
+
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.ruon.app.R;
 import ruon.android.model.MyPreferenceManager;
 import ruon.android.model.NetworkResult;
 import ruon.android.net.LoginWS;
@@ -204,6 +205,6 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
     public String getCopyrightText() {
         Calendar now = Calendar.getInstance();
 
-        return String.format(getString(R.string.login_copy_right_message), now.get(Calendar.YEAR));
+        return String.format(getString(R.string.login_copy_right_message), String.valueOf(now.get(Calendar.YEAR)));
     }
 }
