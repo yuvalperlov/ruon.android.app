@@ -4,16 +4,13 @@ buildscript {
             mavenCentral()
             maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         }
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
-    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.ruon.app"
@@ -33,11 +30,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    apt 'org.parceler:parceler:0.2.9'
-    compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'org.parceler:parceler-api:0.2.9'
-    compile 'com.google.code.gson:gson:2.2.+'
-    compile "com.google.android.gms:play-services:7.5.+"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.jakewharton:butterknife:6.1.0'
+    annotationProcessor 'com.jakewharton:butterknife:6.1.0'
+
+    implementation 'org.parceler:parceler-api:0.2.9'
+    annotationProcessor 'org.parceler:parceler:0.2.9'
+
+    implementation 'com.google.code.gson:gson:2.2.+'
+    implementation "com.google.android.gms:play-services:7.5.+"
 }
 
