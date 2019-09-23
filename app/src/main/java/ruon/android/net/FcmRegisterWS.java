@@ -18,9 +18,9 @@ import ruon.android.util.UserLog;
 /**
  * Created by Ivan on 6/26/2015.
  */
-public class GcmRegisterWS extends NetworkTask {
+public class FcmRegisterWS extends NetworkTask {
 
-public static final String TAG = GcmRegisterWS.class.getSimpleName();
+public static final String TAG = FcmRegisterWS.class.getSimpleName();
     String email;
     String password;
     String mName;
@@ -29,7 +29,7 @@ public static final String TAG = GcmRegisterWS.class.getSimpleName();
     NetworkResult result;
     private static final String UNKNOWN_ERROR = "Unknown error";
 
-    public GcmRegisterWS(String email, String password,String name, String token, NetworkTaskListener listener){
+    public FcmRegisterWS(String email, String password, String name, String token, NetworkTaskListener listener){
         this.email = email;
         this.password = password;
         this.mName = URLEncoder.encode(name);

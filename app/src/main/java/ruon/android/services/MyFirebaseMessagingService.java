@@ -43,14 +43,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             rawAlarm = new JSONObject(message);
             String title = rawAlarm.optString(TITLE_KEY).trim();
             String sound = rawAlarm.getString(SOUND_KEY).trim();
-            UserLog.i(TAG, "Gcm alarm - " + title);
+            UserLog.i(TAG, "Fcm alarm - " + title);
             /**
              * In some cases it may be useful to show a notification indicating to the user
              * that a message was received.
              */
             sendNotification(title, sound);
         }catch (Exception e){
-            Log.e(TAG, "Could not parse GCM message - " + message);
+            Log.e(TAG, "Could not parse Fcm message - " + message);
             e.printStackTrace();
             return ;
         }

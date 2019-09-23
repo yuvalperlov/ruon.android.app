@@ -8,7 +8,7 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import ruon.android.model.MyPreferenceManager;
 import ruon.android.model.NetworkResult;
-import ruon.android.net.GcmRegisterWS;
+import ruon.android.net.FcmRegisterWS;
 import ruon.android.net.NetworkTask;
 import ruon.android.util.UserLog;
 
@@ -31,10 +31,10 @@ public class TokenRegistrator implements NetworkTask.NetworkTaskListener{
     public void registerFirebaseMessagingToken() {
         UserLog.i(TAG, "Firebase messaging token registration");
         UserLog.i(TAG, " Username - " + mUsername);
-        String oldToken = MyPreferenceManager.getGcmToken(context);
+        String oldToken = MyPreferenceManager.getFcmToken(context);
         if(oldToken != null){
             // We already have token Id
-            UserLog.i(TAG, "Gcm old Token - " + oldToken);
+            UserLog.i(TAG, "Fcm old Token - " + oldToken);
             registerOnServerIfNeeded(oldToken);
             return;
         }
@@ -45,8 +45,8 @@ public class TokenRegistrator implements NetworkTask.NetworkTaskListener{
                 public void onSuccess(InstanceIdResult instanceIdResult) {
                     String token = instanceIdResult.getToken();
                     UserLog.i(TAG, "newToken  - " + token);
-                    MyPreferenceManager.saveGcmToken(context, token);
-                    MyPreferenceManager.setGcmRegisteredOnServer(context, false);
+                    MyPreferenceManager.saveFcmToken(context, token);
+                    MyPreferenceManager.setFcmRegisteredOnServer(context, false);
                     registerOnServerIfNeeded(token);
                 }
             });
@@ -56,9 +56,9 @@ public class TokenRegistrator implements NetworkTask.NetworkTaskListener{
     }
 
     private void registerOnServerIfNeeded(String token){
-        if(!MyPreferenceManager.isGcmRegisteredOnOurServer(context)){
+        if(!MyPreferenceManager.isFcmRegisteredOnOurServer(context)){
             UserLog.i(TAG, "Should register on Server!! - " + mUsername);
-            GcmRegisterWS task = new GcmRegisterWS(mUsername, mPassword, android.os.Build.MODEL, token, this);
+            FcmRegisterWS task = new FcmRegisterWS(mUsername, mPassword, android.os.Build.MODEL, token, this);
             task.execute();
         }
     }
@@ -68,7 +68,7 @@ public class TokenRegistrator implements NetworkTask.NetworkTaskListener{
         UserLog.i(TAG, "Server register response! - " + result);
         if(result == NetworkResult.OK){
             UserLog.i(TAG, "Successfully registered on server");
-            MyPreferenceManager.setGcmRegisteredOnServer(context, true);
+            MyPreferenceManager.setFcmRegisteredOnServer(context, true);
         }
     }
 }

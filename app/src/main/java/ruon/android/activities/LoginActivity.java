@@ -53,14 +53,14 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
     private NetworkTask mTask;
     private Handler mHandler;
     private String mToken;
-    private int mGcmWaitCounter;
+    private int mFcmWaitCounter;
 
     @OnClick(R.id.login_btn)
     public void login() {
         UserLog.i(TAG, "DoLogin");
 
 
-        mGcmWaitCounter = 0;
+        mFcmWaitCounter = 0;
         mAlertMessage.setText("");
         try{
             pleaseabilityCheck();
@@ -98,7 +98,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
 
     private void checkIsAlreadyLoggedIn() {
         String token = MyPreferenceManager.getToken(this);
-        String pushToken = MyPreferenceManager.getGcmToken(this);
+        String pushToken = MyPreferenceManager.getFcmToken(this);
         UserLog.i(TAG, "Token - " + token);
         UserLog.i(TAG, "PushToken - " + pushToken);
         if(!TextUtils.isEmpty(token)){
@@ -137,7 +137,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
         }
         if(mHandler != null){
             hideProgress();
-            mHandler.removeCallbacks(mGcmChecker);
+            mHandler.removeCallbacks(mFcmChecker);
         }
         super.onPause();
     }
@@ -157,20 +157,20 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
             // Register for push notifications and wait for a result
             new TokenRegistrator(username, password, this).registerFirebaseMessagingToken();
             mHandler = new Handler();
-            mHandler.postDelayed(mGcmChecker, 2 * DateUtils.SECOND_IN_MILLIS);
+            mHandler.postDelayed(mFcmChecker, 2 * DateUtils.SECOND_IN_MILLIS);
         }
     }
 
     /**
      * Since we do not want to save username and password and we don't want to use a token
-     * for GCMRegister API, we need to handle this right after successful login and we need
-     * to wait the result here.. If GCM registration fails, we will show message "Authentication failed"
+     * for FCMRegister API, we need to handle this right after successful login and we need
+     * to wait the result here.. If FCM registration fails, we will show message "Authentication failed"
      */
-    private Runnable mGcmChecker = new Runnable() {
+    private Runnable mFcmChecker = new Runnable() {
         @Override
         public void run() {
-            boolean isRegistered = MyPreferenceManager.isGcmRegisteredOnOurServer(LoginActivity.this);
-            mGcmWaitCounter++;
+            boolean isRegistered = MyPreferenceManager.isFcmRegisteredOnOurServer(LoginActivity.this);
+            mFcmWaitCounter++;
             if(isRegistered){
                 hideProgress();
                 MyPreferenceManager.saveToken(LoginActivity.this, mToken);
@@ -178,7 +178,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
                 startActivity(mainScreen);
                 finish();
             } else{
-                if(mGcmWaitCounter < 13){
+                if(mFcmWaitCounter < 13){
                     mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
                 }else{
                     hideProgress();
