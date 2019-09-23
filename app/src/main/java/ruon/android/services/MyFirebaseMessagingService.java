@@ -64,7 +64,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setAutoCancel(true)
                         .setColor(getResources().getColor(R.color.app_green))
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-                        .setContentText(title);
+                        .setContentText(title)
+                        .setChannelId(getString(R.string.default_notification_channel_id));
         String sound = getSound(soundRaw);
         if(sound != null){
             mBuilder.setSound(Uri.parse(sound));

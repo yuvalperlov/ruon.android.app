@@ -22,4 +22,8 @@
     <string name="no_alarms_title">There are no alarms :-)</string>
     <string name="login_copy_right_message">Copyright \u00a9 2008-%s</string>
 
+    <string name="default_notification_channel_id">@string/default_channel_name</string>
+    <string name="default_channel_name">Default notification channel</string>
+    <string name="default_channel_description">Notifications from the server</string>
+
 </resources>

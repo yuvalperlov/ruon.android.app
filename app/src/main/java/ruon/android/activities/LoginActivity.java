@@ -1,9 +1,13 @@
 package ruon.android.activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -88,6 +92,25 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
         updateViews();
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = getString(R.string.default_notification_channel_id);
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (mNotificationManager == null) return;
+            NotificationChannel channel = mNotificationManager.getNotificationChannel(channelId);
+            if (channel != null) return; //no need to recreate notification channel
+
+            String name = getString(R.string.default_channel_name);
+            String description = getString(R.string.default_channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+            mNotificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
