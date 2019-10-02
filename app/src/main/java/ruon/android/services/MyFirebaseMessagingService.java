@@ -19,6 +19,7 @@ import com.ruon.app.R;
 
 import org.json.JSONObject;
 
+import ruon.android.activities.LoginActivity;
 import ruon.android.activities.MainActivity;
 import ruon.android.util.TheAlarm;
 import ruon.android.util.UserLog;
@@ -74,7 +75,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(this, LoginActivity.class);
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
@@ -82,7 +83,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(LoginActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
