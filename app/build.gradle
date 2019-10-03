@@ -4,23 +4,20 @@ buildscript {
             mavenCentral()
             maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         }
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.1'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 apply plugin: 'com.google.gms.google-services'
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.ruon.app"
-        minSdkVersion 15
-        targetSdkVersion 22
-        versionCode 101
-        versionName "2.0"
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 110
+        versionName "2.1"
     }
     buildTypes {
         release {
@@ -28,15 +25,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    apt 'org.parceler:parceler:0.2.9'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'org.parceler:parceler-api:0.2.9'
-    compile 'com.google.code.gson:gson:2.2.+'
-    compile "com.google.android.gms:play-services:7.5.+"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.jakewharton:butterknife:6.1.0'
+    annotationProcessor 'com.jakewharton:butterknife:6.1.0'
+
+    implementation 'org.parceler:parceler-api:0.2.9'
+    annotationProcessor 'org.parceler:parceler:0.2.9'
+
+    implementation 'com.google.code.gson:gson:2.2.+'
+    implementation "com.google.android.gms:play-services:7.5.+"
+
+    implementation "com.google.firebase:firebase-messaging:20.0.0"
 }
 

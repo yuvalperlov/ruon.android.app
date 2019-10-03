@@ -1,9 +1,13 @@
 package ruon.android.activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
@@ -17,17 +21,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ruon.app.R;
+
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.ruon.app.R;
 import ruon.android.model.MyPreferenceManager;
 import ruon.android.model.NetworkResult;
 import ruon.android.net.LoginWS;
 import ruon.android.net.NetworkTask;
-import ruon.android.services.GcmRegisterService;
+import ruon.android.services.TokenRegistrator;
 import ruon.android.util.InfoDialog;
 import ruon.android.util.NetworkUtils;
 import ruon.android.util.UserLog;
@@ -35,9 +40,6 @@ import ruon.android.util.UserLog;
 
 public class LoginActivity extends WorkerActivity implements NetworkTask.NetworkTaskListener{
     private static final String TAG = LoginActivity.class.getSimpleName();
-
-    public static final String PASSWORD = "Password";
-    public static final String USERNAME = "Username";
 
     @InjectView(R.id.email)
     EditText mEmail;
@@ -55,14 +57,14 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
     private NetworkTask mTask;
     private Handler mHandler;
     private String mToken;
-    private int mGcmWaitCounter;
+    private int mFcmWaitCounter;
 
     @OnClick(R.id.login_btn)
     public void login() {
         UserLog.i(TAG, "DoLogin");
 
 
-        mGcmWaitCounter = 0;
+        mFcmWaitCounter = 0;
         mAlertMessage.setText("");
         try{
             pleaseabilityCheck();
@@ -90,6 +92,25 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
         updateViews();
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = getString(R.string.default_notification_channel_id);
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (mNotificationManager == null) return;
+            NotificationChannel channel = mNotificationManager.getNotificationChannel(channelId);
+            if (channel != null) return; //no need to recreate notification channel
+
+            String name = getString(R.string.default_channel_name);
+            String description = getString(R.string.default_channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+            mNotificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -100,7 +121,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
 
     private void checkIsAlreadyLoggedIn() {
         String token = MyPreferenceManager.getToken(this);
-        String pushToken = MyPreferenceManager.getGcmToken(this);
+        String pushToken = MyPreferenceManager.getFcmToken(this);
         UserLog.i(TAG, "Token - " + token);
         UserLog.i(TAG, "PushToken - " + pushToken);
         if(!TextUtils.isEmpty(token)){
@@ -139,7 +160,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
         }
         if(mHandler != null){
             hideProgress();
-            mHandler.removeCallbacks(mGcmChecker);
+            mHandler.removeCallbacks(mFcmChecker);
         }
         super.onPause();
     }
@@ -152,27 +173,27 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
             mAlertMessage.setText(mToken);
         }else{
             UserLog.i(TAG, "Token - " + mToken);
-            Intent gcmRegister = new Intent(this, GcmRegisterService.class);
+
+            String username = mEmail.getText().toString().trim();
+            String password = mPassword.getText().toString().trim();
 
             // Register for push notifications and wait for a result
-            gcmRegister.putExtra(USERNAME, mEmail.getText().toString().trim());
-            gcmRegister.putExtra(PASSWORD, mPassword.getText().toString().trim());
-            startService(gcmRegister);
+            new TokenRegistrator(username, password, this).registerFirebaseMessagingToken();
             mHandler = new Handler();
-            mHandler.postDelayed(mGcmChecker, 2 * DateUtils.SECOND_IN_MILLIS);
+            mHandler.postDelayed(mFcmChecker, 2 * DateUtils.SECOND_IN_MILLIS);
         }
     }
 
     /**
      * Since we do not want to save username and password and we don't want to use a token
-     * for GCMRegister API, we need to handle this right after successful login and we need
-     * to wait the result here.. If GCM registration fails, we will show message "Authentication failed"
+     * for FCMRegister API, we need to handle this right after successful login and we need
+     * to wait the result here.. If FCM registration fails, we will show message "Authentication failed"
      */
-    private Runnable mGcmChecker = new Runnable() {
+    private Runnable mFcmChecker = new Runnable() {
         @Override
         public void run() {
-            boolean isRegistered = MyPreferenceManager.isGcmRegisteredOnOurServer(LoginActivity.this);
-            mGcmWaitCounter++;
+            boolean isRegistered = MyPreferenceManager.isFcmRegisteredOnOurServer(LoginActivity.this);
+            mFcmWaitCounter++;
             if(isRegistered){
                 hideProgress();
                 MyPreferenceManager.saveToken(LoginActivity.this, mToken);
@@ -180,7 +201,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
                 startActivity(mainScreen);
                 finish();
             } else{
-                if(mGcmWaitCounter < 13){
+                if(mFcmWaitCounter < 13){
                     mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
                 }else{
                     hideProgress();
@@ -204,6 +225,6 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
     public String getCopyrightText() {
         Calendar now = Calendar.getInstance();
 
-        return String.format(getString(R.string.login_copy_right_message), now.get(Calendar.YEAR));
+        return String.format(getString(R.string.login_copy_right_message), String.valueOf(now.get(Calendar.YEAR)));
     }
 }

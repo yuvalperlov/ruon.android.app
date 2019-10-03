@@ -6,17 +6,20 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.ruon.app.R;
 
 import org.json.JSONObject;
 
+import ruon.android.activities.LoginActivity;
 import ruon.android.activities.MainActivity;
 import ruon.android.util.TheAlarm;
 import ruon.android.util.UserLog;
@@ -24,8 +27,8 @@ import ruon.android.util.UserLog;
 /**
  * Created by Ivan on 6/30/2015.
  */
-public class MyGcmService extends GcmListenerService {
-    private static final String TAG = MyGcmService.class.getSimpleName();
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
     private static final String ALARM_KEY = "alarm";
     private static final String TITLE_KEY = "title";
@@ -33,23 +36,22 @@ public class MyGcmService extends GcmListenerService {
 
     public static int sNotificationId;
 
-
     @Override
-    public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString(ALARM_KEY);
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        String message = remoteMessage.getData().get(ALARM_KEY);
         JSONObject rawAlarm = null;
         try{
             rawAlarm = new JSONObject(message);
             String title = rawAlarm.optString(TITLE_KEY).trim();
             String sound = rawAlarm.getString(SOUND_KEY).trim();
-            UserLog.i(TAG, "Gcm alarm - " + title);
+            UserLog.i(TAG, "Fcm alarm - " + title);
             /**
              * In some cases it may be useful to show a notification indicating to the user
              * that a message was received.
              */
             sendNotification(title, sound);
         }catch (Exception e){
-            Log.e(TAG, "Could not parse GCM message - " + message);
+            Log.e(TAG, "Could not parse Fcm message - " + message);
             e.printStackTrace();
             return ;
         }
@@ -63,7 +65,8 @@ public class MyGcmService extends GcmListenerService {
                         .setAutoCancel(true)
                         .setColor(getResources().getColor(R.color.app_green))
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-                        .setContentText(title);
+                        .setContentText(title)
+                        .setChannelId(getString(R.string.default_notification_channel_id));
         String sound = getSound(soundRaw);
         if(sound != null){
             mBuilder.setSound(Uri.parse(sound));
@@ -72,7 +75,7 @@ public class MyGcmService extends GcmListenerService {
         }
 
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(this, LoginActivity.class);
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
@@ -80,7 +83,7 @@ public class MyGcmService extends GcmListenerService {
         // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(LoginActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =

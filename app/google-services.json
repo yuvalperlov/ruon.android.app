@@ -1,1 +1,85 @@
-{"project_info":{"project_id":"r-u-on-c952","project_number":"163129604709","name":"R-U-ON"},"client":[{"client_info":{"client_id":"android:alarms.app.ruon.com","client_type":1,"android_client_info":{"package_name":"alarms.app.ruon.com"}},"oauth_client":[],"services":{"analytics_service":{"status":1},"cloud_messaging_service":{"status":2,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":1},"ads_service":{"status":1}}}],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_number": "163129604709",
+    "firebase_url": "https://r-u-on-c952.firebaseio.com",
+    "project_id": "r-u-on-c952",
+    "storage_bucket": "r-u-on-c952.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163129604709:android:f9473154cabfbad4",
+        "android_client_info": {
+          "package_name": "alarms.app.ruon.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163129604709-hhogf7b2ujp55u93tafv6dtdcg9hi9e0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "alarms.app.ruon.com",
+            "certificate_hash": "683b3eb15bb2aad5ce55ca2c80e600924aa21983"
+          }
+        },
+        {
+          "client_id": "163129604709-cvqc0mi638f4u8719umhgfkknajap0hu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWH9vrbtWJfcUppIQ68ykyrywAsNAnhUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163129604709-cvqc0mi638f4u8719umhgfkknajap0hu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163129604709:android:f7e7261e0dec50a5a5648c",
+        "android_client_info": {
+          "package_name": "com.ruon.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "163129604709-u8b7ca0h23fr2h41rquml173mh0mc9rd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ruon.app",
+            "certificate_hash": "683b3eb15bb2aad5ce55ca2c80e600924aa21983"
+          }
+        },
+        {
+          "client_id": "163129604709-cvqc0mi638f4u8719umhgfkknajap0hu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWH9vrbtWJfcUppIQ68ykyrywAsNAnhUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "163129604709-cvqc0mi638f4u8719umhgfkknajap0hu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
