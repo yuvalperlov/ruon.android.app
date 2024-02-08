@@ -125,10 +125,10 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
                 25,40 , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannablecontent.setSpan(new ForegroundColorSpan(Color.parseColor("#88b057")),
                 25,40 , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mAddAcciountHint.setMovementMethod(LinkMovementMethod.getInstance());
-        mAddAcciountHint.setText(spannablecontent);
-        mVersionName.setText(getVersionName());
-        mCopyright.setText(getCopyrightText());
+//        mAddAcciountHint.setMovementMethod(LinkMovementMethod.getInstance());
+//        mAddAcciountHint.setText(spannablecontent);
+//        mVersionName.setText(getVersionName());
+//        mCopyright.setText(getCopyrightText());
     }
 
     @Override

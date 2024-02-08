@@ -46,7 +46,7 @@ public class GcmRegisterService extends IntentService implements NetworkTask.Net
         }
         try{
             InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+            String token = instanceID.getToken(getString(R.string.abc_action_bar_home_description),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             UserLog.i(TAG, "newToken  - " + token);
             MyPreferenceManager.saveGcmToken(this, token);
