@@ -1,11 +1,11 @@
 package ruon.android.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.parceler.Parcels;
 
@@ -18,7 +18,7 @@ import ruon.android.util.UserLog;
 /**
  * Created by Ivan on 6/29/2015.
  */
-public class AlarmDetailsActivity extends ActionBarActivity {
+public class AlarmDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = AlarmDetailsActivity.class.getSimpleName();
 
@@ -36,7 +36,7 @@ public class AlarmDetailsActivity extends ActionBarActivity {
     LinearLayout mSeverityContainer;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_details_activity);
         getAlarmInfo();
