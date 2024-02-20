@@ -28,15 +28,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 //    apt 'org.parceler:parceler:0.2.9'
     implementation 'com.android.support:appcompat-v7:22.2.0'
-    implementation 'com.jakewharton:butterknife:6.1.0'
     implementation 'org.parceler:parceler-api:0.2.9'
-    implementation 'com.google.code.gson:gson:2.2.+'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation "com.google.android.gms:play-services:7.5.+"
 }
 

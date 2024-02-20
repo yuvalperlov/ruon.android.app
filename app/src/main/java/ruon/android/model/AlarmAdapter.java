@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ruon.android.util.TheAlarm;
 import ruon.rssapi.Alarm;
+
 import com.ruon.app.R;
+import com.ruon.app.databinding.AlarmDetailsActivityBinding;
+import com.ruon.app.databinding.AlarmListItemBinding;
 
 /**
  * Created by Ivan on 6/26/2015.
@@ -24,7 +25,7 @@ public class AlarmAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private ArrayList<TheAlarm> items = new ArrayList<TheAlarm>();
 
-    public AlarmAdapter(Context context){
+    public AlarmAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
     }
 
@@ -38,16 +39,18 @@ public class AlarmAdapter extends BaseAdapter {
         return super.getItemViewType(position);
     }
 
+    private AlarmListItemBinding binding;
+
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         ViewHolder holder;
         TheAlarm alarm = getItem(position);
-        if(view == null){
-            view = mInflater.inflate(R.layout.alarm_list_item, null, false);
-            holder = new ViewHolder(view);
+        if (view == null) {
+            binding = AlarmListItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+            holder = new ViewHolder(binding);
             view.setTag(holder);
-        }else{
-            holder = (ViewHolder)view.getTag();
+        } else {
+            holder = (ViewHolder) view.getTag();
         }
         holder.couse.setText(alarm.getResource());
         holder.title.setText(alarm.getAgent());
@@ -66,29 +69,28 @@ public class AlarmAdapter extends BaseAdapter {
         return items.get(i);
     }
 
-    public void swapData(ArrayList<TheAlarm> items){
+    public void swapData(ArrayList<TheAlarm> items) {
         this.items = items;
     }
 
-    static class ViewHolder{
-        @InjectView(R.id.alarm_title)
+    static class ViewHolder {
         TextView title;
-        @InjectView(R.id.alarm_cause)
         TextView couse;
-        @InjectView(R.id.alarm_short_report)
         TextView snippet;
-        @InjectView(R.id.root_element)
         LinearLayout root;
 
-        public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
+        public ViewHolder(AlarmListItemBinding binding) {
+            title = binding.alarmTitle;
+            couse = binding.alarmCause;
+            snippet = binding.alarmShortReport;
+            root = binding.rootElement;
         }
 
-        public void updateBG(Alarm.Severity severity){
-            if(severity == null){
+        public void updateBG(Alarm.Severity severity) {
+            if (severity == null) {
                 return;
             }
-            switch (severity){
+            switch (severity) {
                 case Minor:
                     root.setBackgroundColor(root.getContext().getResources().getColor(R.color.app_minor));
                     break;
@@ -102,10 +104,4 @@ public class AlarmAdapter extends BaseAdapter {
         }
     }
 
-    private LayoutInflater getInflater(View v){
-        if(mInflater == null){
-            mInflater = LayoutInflater.from(v.getContext());
-        }
-        return mInflater;
-    }
 }
