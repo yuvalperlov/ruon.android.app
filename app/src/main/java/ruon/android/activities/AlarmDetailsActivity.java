@@ -1,45 +1,39 @@
 package ruon.android.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.parceler.Parcels;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import ruon.android.util.TheAlarm;
+
 import com.ruon.app.R;
+import com.ruon.app.databinding.AlarmDetailsActivityBinding;
+
 import ruon.android.util.UserLog;
 
 /**
  * Created by Ivan on 6/29/2015.
  */
-public class AlarmDetailsActivity extends ActionBarActivity {
+public class AlarmDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = AlarmDetailsActivity.class.getSimpleName();
 
     private TheAlarm mAlarm;
 
-    @InjectView(R.id.alarm_detail)
-    TextView mAlarmDetail;
-    @InjectView(R.id.alarm_agent)
-    TextView mAlarmAgent;
-    @InjectView(R.id.alarm_severity)
-    TextView mAlarmSeverity;
-    @InjectView(R.id.alarm_timestamp)
-    TextView mAlarmTimestamp;
-    @InjectView(R.id.severity_container)
-    LinearLayout mSeverityContainer;
+    private AlarmDetailsActivityBinding binding;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.alarm_details_activity);
+        binding = AlarmDetailsActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         getAlarmInfo();
+        setContentView(R.layout.alarm_details_activity);
         updateViews();
     }
 
@@ -55,23 +49,23 @@ public class AlarmDetailsActivity extends ActionBarActivity {
     }
 
     private void updateValues() {
-        if(mAlarm == null) {
+        if (mAlarm == null) {
             finish();
-        } else{
+        } else {
             getSupportActionBar().setTitle(mAlarm.getAgent());
-            mAlarmSeverity.setText(mAlarm.getSeverity().toString());
-            mAlarmTimestamp.setText(mAlarm.getDate());
-            mAlarmAgent.setText(mAlarm.getResource());
-            mAlarmDetail.setText(mAlarm.getGuid() + "\n\n" + mAlarm.getDescription());
-            switch (mAlarm.getSeverity()){
+            binding.alarmSeverity.setText(mAlarm.getSeverity().toString());
+            binding.alarmTimestamp.setText(mAlarm.getDate());
+            binding.alarmAgent.setText(mAlarm.getResource());
+            binding.alarmDetail.setText(mAlarm.getGuid() + "\n\n" + mAlarm.getDescription());
+            switch (mAlarm.getSeverity()) {
                 case Minor:
-                    mSeverityContainer.setBackgroundColor(getResources().getColor(R.color.app_minor));
+                    binding.severityContainer.setBackgroundColor(getResources().getColor(R.color.app_minor));
                     break;
                 case Major:
-                    mSeverityContainer.setBackgroundColor(getResources().getColor(R.color.app_major));
+                    binding.severityContainer.setBackgroundColor(getResources().getColor(R.color.app_major));
                     break;
                 case Critical:
-                    mSeverityContainer.setBackgroundColor(getResources().getColor(R.color.app_critical));
+                    binding.severityContainer.setBackgroundColor(getResources().getColor(R.color.app_critical));
                     break;
             }
         }
@@ -79,16 +73,21 @@ public class AlarmDetailsActivity extends ActionBarActivity {
 
     private void updateViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ButterKnife.inject(this);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

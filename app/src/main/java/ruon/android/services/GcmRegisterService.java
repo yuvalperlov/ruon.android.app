@@ -44,17 +44,17 @@ public class GcmRegisterService extends IntentService implements NetworkTask.Net
             registerOnServerIfNeeded(oldToken);
             return;
         }
-        try{
-            InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
-                    GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            UserLog.i(TAG, "newToken  - " + token);
-            MyPreferenceManager.saveGcmToken(this, token);
+//        try{
+//            InstanceID instanceID = InstanceID.getInstance(this);
+////            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+//                    GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+//            UserLog.i(TAG, "newToken  - " + token);
+            MyPreferenceManager.saveGcmToken(this, "token");
             MyPreferenceManager.setGcmRegisteredOnServer(this, false);
-            registerOnServerIfNeeded(token);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+//            registerOnServerIfNeeded(token);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     private void registerOnServerIfNeeded(String token){
@@ -68,10 +68,10 @@ public class GcmRegisterService extends IntentService implements NetworkTask.Net
     @Override
     public void OnResult(NetworkResult result, Object o) {
         UserLog.i(TAG, "Server register response! - " + result);
-        if(result == NetworkResult.OK){
+//        if(result == NetworkResult.OK){
             UserLog.i(TAG, "Successfully registered on server");
             MyPreferenceManager.setGcmRegisteredOnServer(this, true);
-        }
+//        }
         stopSelf();
     }
 }
