@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -33,7 +34,6 @@ public class RUOnMessagingService extends FirebaseMessagingService {
     private static final String ALARM_KEY = "alarm";
     private static final String TITLE_KEY = "title";
     private static final String SOUND_KEY = "sound";
-    private static final String NOTIFICATION_CHANNEL_ID = "ruon_notification_channel";
     public static int sNotificationId;
 
     @Override
@@ -59,10 +59,10 @@ public class RUOnMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String title, String soundRaw) {
-        createNotificationChannel();
+        createNotificationChannel(soundRaw);
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                new NotificationCompat.Builder(this, getString(R.string.channel_id) + "_" + soundRaw)
                         .setSmallIcon(R.drawable.notification)
                         .setContentTitle(getString(R.string.app_name))
                         .setAutoCancel(true)
@@ -112,13 +112,22 @@ public class RUOnMessagingService extends FirebaseMessagingService {
         sendBroadcast(intent);
     }
 
-    private void createNotificationChannel() {
+    private void createNotificationChannel(String soundRaw) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            String sound = getSound(soundRaw);
+            NotificationChannel channel = new NotificationChannel(getString(R.string.channel_id) + "_" + soundRaw, name, importance);
             channel.setDescription(description);
+            if (sound != null) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build();
+
+                channel.setSound(Uri.parse(sound), audioAttributes);
+            }
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
