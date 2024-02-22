@@ -114,8 +114,8 @@ public class RUOnMessagingService extends FirebaseMessagingService {
 
     private void createNotificationChannel(String soundRaw) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
+            CharSequence name = getString(R.string.channel_name, soundRaw);
+            String description = getString(R.string.channel_description, soundRaw);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             String sound = getSound(soundRaw);
             NotificationChannel channel = new NotificationChannel(getString(R.string.channel_id) + "_" + soundRaw, name, importance);
