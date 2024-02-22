@@ -1,9 +1,12 @@
 package ruon.android.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -14,9 +17,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ruon.app.R;
 
 import org.parceler.Parcels;
@@ -46,6 +56,15 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
     private boolean mShouldRefresh = true;
     private BroadcastReceiver receiver;
     private IntentFilter filter;
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    UserLog.i(TAG, "notifications permission granted");
+                } else {
+                    UserLog.i(TAG, "notifications permission not granted");
+                }
+            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +72,16 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
         setContentView(R.layout.activity_main);
         updateViews();
         createReceiver();
+        askNotificationPermission();
+    }
+
+    private void askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     private void createReceiver() {
@@ -61,7 +90,7 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.i(TAG, "OnNotificationRefresh");
+                UserLog.i(TAG, "OnNotificationRefresh");
                 if(NetworkUtils.isNetworkAvailable(MainActivity.this)) {
                     refresh();
                 }
@@ -72,7 +101,11 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(receiver, filter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(receiver, filter);
+        }
         if(mShouldRefresh){
             showProgress();
             mList.setAdapter(null);
@@ -192,7 +225,7 @@ public class MainActivity extends WorkerActivity implements NetworkTask.NetworkT
 
     private AlarmAdapter getAdapter(){
         if(mAdapter == null){
-            mAdapter = new AlarmAdapter(this);
+            mAdapter = new AlarmAdapter();
         }
         return mAdapter;
     }

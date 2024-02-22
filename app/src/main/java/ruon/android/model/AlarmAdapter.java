@@ -1,6 +1,5 @@
 package ruon.android.model;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import ruon.android.util.TheAlarm;
 import ruon.rssapi.Alarm;
 
 import com.ruon.app.R;
-import com.ruon.app.databinding.AlarmDetailsActivityBinding;
 import com.ruon.app.databinding.AlarmListItemBinding;
 
 /**
@@ -22,12 +20,7 @@ import com.ruon.app.databinding.AlarmListItemBinding;
  */
 public class AlarmAdapter extends BaseAdapter {
 
-    private LayoutInflater mInflater;
-    private ArrayList<TheAlarm> items = new ArrayList<TheAlarm>();
-
-    public AlarmAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-    }
+    private ArrayList<TheAlarm> items = new ArrayList<>();
 
     @Override
     public int getCount() {
@@ -39,20 +32,18 @@ public class AlarmAdapter extends BaseAdapter {
         return super.getItemViewType(position);
     }
 
-    private AlarmListItemBinding binding;
-
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         ViewHolder holder;
         TheAlarm alarm = getItem(position);
         if (view == null) {
-            binding = AlarmListItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
-            holder = new ViewHolder(binding);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.alarm_list_item, null, false);
+            holder = new ViewHolder(view);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.couse.setText(alarm.getResource());
+        holder.cause.setText(alarm.getResource());
         holder.title.setText(alarm.getAgent());
         holder.snippet.setText(alarm.getDescription());
         holder.updateBG(alarm.getSeverity());
@@ -75,15 +66,15 @@ public class AlarmAdapter extends BaseAdapter {
 
     static class ViewHolder {
         TextView title;
-        TextView couse;
+        TextView cause;
         TextView snippet;
         LinearLayout root;
 
-        public ViewHolder(AlarmListItemBinding binding) {
-            title = binding.alarmTitle;
-            couse = binding.alarmCause;
-            snippet = binding.alarmShortReport;
-            root = binding.rootElement;
+        public ViewHolder(View view) {
+            title = view.findViewById(R.id.alarm_title);
+            cause = view.findViewById(R.id.alarm_cause);
+            snippet = view.findViewById(R.id.alarm_short_report);
+            root = (LinearLayout) view;
         }
 
         public void updateBG(Alarm.Severity severity) {

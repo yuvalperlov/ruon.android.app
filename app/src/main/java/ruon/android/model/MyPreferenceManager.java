@@ -11,7 +11,7 @@ public class MyPreferenceManager {
 
     private static SharedPreferences sPrefs;
     public static final String TOKEN = "token";
-    public static final String GCM_TOKEN = "gcm_token";
+    public static final String FCM_TOKEN = "fcm_token";
     public static final String REGISTERED_ON_SERVER = "REGISTERED_ON_SERVER";
 
 
@@ -25,24 +25,24 @@ public class MyPreferenceManager {
         return getPrefs(context).getString(TOKEN, null);
     }
 
-    public static void saveGcmToken(Context context, String token){
+    public static void saveFirebaseToken(Context context, String token){
         SharedPreferences.Editor editor = getEditor(context);
-        editor.putString(GCM_TOKEN, token);
+        editor.putString(FCM_TOKEN, token);
         editor.commit();
     }
 
-    public static boolean isGcmRegisteredOnOurServer(Context context){
+    public static boolean isFcmRegisteredOnOurServer(Context context){
         return getPrefs(context).getBoolean(REGISTERED_ON_SERVER, false);
     }
 
-    public static void setGcmRegisteredOnServer(Context context, boolean state){
+    public static void setFcmRegisteredOnServer(Context context, boolean state){
         SharedPreferences.Editor editor = getEditor(context);
         editor.putBoolean(REGISTERED_ON_SERVER, state);
         editor.commit();
     }
 
-    public static String getGcmToken(Context context){
-        return getPrefs(context).getString(GCM_TOKEN, null);
+    public static String getFcmToken(Context context){
+        return getPrefs(context).getString(FCM_TOKEN, null);
     }
 
     private static SharedPreferences getPrefs(Context context){

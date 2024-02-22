@@ -1,9 +1,10 @@
 package ruon.android.util;
 
+import android.os.Build;
 import android.util.Log;
 
 public class UserLog {
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static void i(String TAG, String message){
 		if(DEBUG){
@@ -14,6 +15,12 @@ public class UserLog {
 	public static void v(String TAG, String message){
 		if(DEBUG){
 			Log.i(TAG, message);
+		}
+	}
+
+	public static void e(String TAG, String message) {
+		if (DEBUG) {
+			Log.e(TAG, message);
 		}
 	}
 	

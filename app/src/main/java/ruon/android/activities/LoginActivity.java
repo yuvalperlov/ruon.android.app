@@ -22,9 +22,9 @@ import com.ruon.app.databinding.ActivityLoginBinding;
 
 import ruon.android.model.MyPreferenceManager;
 import ruon.android.model.NetworkResult;
+import ruon.android.net.FcmRegisterWS;
 import ruon.android.net.LoginWS;
 import ruon.android.net.NetworkTask;
-import ruon.android.services.GcmRegisterService;
 import ruon.android.util.InfoDialog;
 import ruon.android.util.NetworkUtils;
 import ruon.android.util.UserLog;
@@ -33,19 +33,15 @@ import ruon.android.util.UserLog;
 public class LoginActivity extends WorkerActivity implements NetworkTask.NetworkTaskListener {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    public static final String PASSWORD = "Password";
-    public static final String USERNAME = "Username";
-
     private NetworkTask mTask;
     private Handler mHandler;
     private String mToken;
-    private int mGcmWaitCounter;
+    private int mFcmWaitCounter;
 
     public void login() {
         UserLog.i(TAG, "DoLogin");
 
-
-        mGcmWaitCounter = 0;
+        mFcmWaitCounter = 0;
         binding.alertMessage.setText("");
         try {
             pleaseabilityCheck();
@@ -85,7 +81,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
 
     private void checkIsAlreadyLoggedIn() {
         String token = MyPreferenceManager.getToken(this);
-        String pushToken = MyPreferenceManager.getGcmToken(this);
+        String pushToken = MyPreferenceManager.getFcmToken(this);
         UserLog.i(TAG, "Token - " + token);
         UserLog.i(TAG, "PushToken - " + pushToken);
         if (!TextUtils.isEmpty(token)) {
@@ -139,12 +135,22 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
             binding.alertMessage.setText(mToken);
         } else {
             UserLog.i(TAG, "Token - " + mToken);
-            Intent gcmRegister = new Intent(this, GcmRegisterService.class);
 
-            // Register for push notifications and wait for a result
-            gcmRegister.putExtra(USERNAME, binding.email.getText().toString().trim());
-            gcmRegister.putExtra(PASSWORD, binding.password.getText().toString().trim());
-            startService(gcmRegister);
+            String username = binding.email.getText().toString().trim();
+            String password = binding.password.getText().toString().trim();
+            String token = MyPreferenceManager.getFcmToken(this);
+            if(token != null && !MyPreferenceManager.isFcmRegisteredOnOurServer(this)){
+                UserLog.i(TAG, "Should register on Server!! - " + username);
+                FcmRegisterWS task = new FcmRegisterWS(username, password, android.os.Build.MODEL, token, (result1, o1) -> {
+                    UserLog.i(TAG, "Server register response! - " + result1);
+                    if (result1 == NetworkResult.OK) {
+                        UserLog.i(TAG, "Successfully registered on server");
+                        MyPreferenceManager.setFcmRegisteredOnServer(this, true);
+                    }
+                });
+                task.execute();
+            }
+
             mHandler = new Handler();
             mHandler.postDelayed(mGcmChecker, 2 * DateUtils.SECOND_IN_MILLIS);
         }
@@ -158,8 +164,8 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
     private Runnable mGcmChecker = new Runnable() {
         @Override
         public void run() {
-            boolean isRegistered = MyPreferenceManager.isGcmRegisteredOnOurServer(LoginActivity.this);
-            mGcmWaitCounter++;
+            boolean isRegistered = MyPreferenceManager.isFcmRegisteredOnOurServer(LoginActivity.this);
+            mFcmWaitCounter++;
             if (isRegistered) {
                 hideProgress();
                 MyPreferenceManager.saveToken(LoginActivity.this, mToken);
@@ -167,7 +173,7 @@ public class LoginActivity extends WorkerActivity implements NetworkTask.Network
                 startActivity(mainScreen);
                 finish();
             } else {
-                if (mGcmWaitCounter < 13) {
+                if (mFcmWaitCounter < 13) {
                     mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
                 } else {
                     hideProgress();
