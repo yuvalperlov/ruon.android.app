@@ -40,6 +40,8 @@ public class RUOnMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage message) {
         Map<String, String> data = message.getData();
         String alarmMessage = data.get(ALARM_KEY);
+        if (alarmMessage == null) return;
+
         JSONObject rawAlarm;
         try {
             rawAlarm = new JSONObject(alarmMessage);
