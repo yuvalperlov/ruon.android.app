@@ -3,6 +3,10 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def keystorePropertiesFile = rootProject.file("app/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace 'com.ruon.app'
     compileSdk 34
@@ -13,8 +17,18 @@ android {
         targetSdk 34
         versionCode 102
         versionName "3.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
     }
 
     buildTypes {
@@ -31,6 +45,16 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            def versionName = variant.versionName
+            outputFileName = "R-U-On.${versionName}_${variant.versionCode}_${variant.buildType.name}.apk"
+            variant.outputs.each { output ->
+                output.versionNameOverride = versionName
+            }
+        }
     }
 }
 
@@ -49,4 +73,6 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:32.7.2")
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+
+    implementation 'com.android.support:multidex:1.0.3'
 }
