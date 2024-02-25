@@ -129,7 +129,19 @@ public class RUOnMessagingService extends FirebaseMessagingService {
                 channel.setSound(Uri.parse(sound), audioAttributes);
             }
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
+            deleteUnusedNotificationChannels(soundRaw, notificationManager);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void deleteUnusedNotificationChannels(String soundRaw, NotificationManager manager) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+
+        for (TheAlarm.Sound value : TheAlarm.Sound.values()) {
+            if (!soundRaw.equals(value.name())) {
+                manager.deleteNotificationChannel(getString(R.string.channel_id) + "_" + value.name());
+            }
         }
     }
 
