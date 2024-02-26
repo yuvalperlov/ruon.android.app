@@ -11,7 +11,7 @@ android {
         applicationId "com.ruon.app"
         minSdk 19
         targetSdk 34
-        versionCode 102
+        versionCode 300
         versionName "3.0"
         multiDexEnabled true
 
