@@ -24,5 +24,9 @@
     <string name="channel_name">Alarms with %1s ringtone sound</string>
     <string name="channel_description">R-U-On alarm notifications with %1s ringtone sound</string>
     <string name="channel_id">ruon_notification_channel</string>
+    <string name="notification_permission_required_dialog_title">Notification Permission Required</string>
+    <string name="notification_permission_required_dialog_message">The app needs permission to send notifications. Please enable it in the app settings.</string>
+    <string name="notification_permission_required_dialog_go_to_settings">Go to Settings</string>
+    <string name="notification_permission_required_cancel">Cancel</string>
 
 </resources>
