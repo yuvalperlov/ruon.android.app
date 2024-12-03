@@ -45,19 +45,23 @@ class NotificationPermissionManager(activityResultRegistry: ActivityResultRegist
         val shouldShowRequestPermissionRationale =
             activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
 
-
-        if (isNotificationPermissionGranted(activity)) {
-            MyPreferenceManager.setShouldShowNotificationPermissionRational(activity, false)
-        } else if (shouldShowRequestPermissionRationale) {
-            // after notification permission request was denied once
-            launchNotificationPermissionRequest(notificationPermissionLauncher)
-            MyPreferenceManager.setShouldShowNotificationPermissionRational(activity, true)
-        } else if (MyPreferenceManager.shouldShowNotificationPermissionRational(activity)) {
-            // showing rational after notification permission request was denied twice
-            showNotificationPermissionRational(activity)
-        } else {
-            // first time requesting permission
-            launchNotificationPermissionRequest(notificationPermissionLauncher)
+        when {
+            isNotificationPermissionGranted(activity) -> {
+                MyPreferenceManager.setShouldShowNotificationPermissionRational(activity, false)
+            }
+            shouldShowRequestPermissionRationale -> {
+                // after notification permission request was denied once
+                launchNotificationPermissionRequest(notificationPermissionLauncher)
+                MyPreferenceManager.setShouldShowNotificationPermissionRational(activity, true)
+            }
+            MyPreferenceManager.shouldShowNotificationPermissionRational(activity) -> {
+                // showing rational after notification permission request was denied twice
+                showNotificationPermissionRational(activity)
+            }
+            else -> {
+                // first time requesting permission
+                launchNotificationPermissionRequest(notificationPermissionLauncher)
+            }
         }
     }
 
