@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.ruon.app.R;
 import com.ruon.app.databinding.AlarmDetailsActivityBinding;
 
+import ruon.android.model.WindowInsetsManager;
 import ruon.android.util.TheAlarm;
 import ruon.android.util.UserLog;
 
@@ -28,19 +29,36 @@ public class AlarmDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = AlarmDetailsActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        new WindowInsetsManager().handleWindowInsets(this, binding.rootElement);
+
         getAlarmInfo();
         updateViews();
-    }
-
-    private void getAlarmInfo() {
-        mAlarm = new Gson().fromJson(getIntent().getStringExtra(TheAlarm.TAG), TheAlarm.class);
-        UserLog.i(TAG, "Alarm - " + mAlarm);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateValues();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void getAlarmInfo() {
+        mAlarm = new Gson().fromJson(getIntent().getStringExtra(TheAlarm.TAG), TheAlarm.class);
+        UserLog.i(TAG, "Alarm - " + mAlarm);
     }
 
     private void updateValues() {
@@ -68,20 +86,5 @@ public class AlarmDetailsActivity extends AppCompatActivity {
 
     private void updateViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        binding = null;
     }
 }

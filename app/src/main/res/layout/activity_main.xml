@@ -1,45 +1,56 @@
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refresher"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/mList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ></ListView>
+            android:layout_width="0.dp"
+            android:layout_height="0.dp"
+            app:layout_constraintBottom_toBottomOf="@id/container"
+            app:layout_constraintLeft_toLeftOf="@id/container"
+            app:layout_constraintRight_toRightOf="@id/container"
+            app:layout_constraintTop_toTopOf="@id/container" />
 
         <TextView
             android:id="@+id/warning_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="22dp"
             android:layout_marginTop="22dp"
             android:background="@color/app_green"
-            android:visibility="gone"
             android:gravity="center"
             android:minHeight="20dp"
-            android:textSize="20sp"
+            android:padding="22dp"
             android:text="@string/no_alarms_title"
-            android:textColor="@android:color/white"/>
-
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/container"
+            app:layout_constraintRight_toRightOf="@id/container"
+            app:layout_constraintTop_toTopOf="@id/container" />
 
         <LinearLayout
             android:id="@+id/progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="#22444444"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
             android:clickable="true"
-            android:paddingTop="100dp">
+            android:gravity="center_horizontal"
+            android:paddingTop="100dp"
+            app:layout_constraintBottom_toBottomOf="@id/container"
+            app:layout_constraintLeft_toLeftOf="@id/container"
+            app:layout_constraintRight_toRightOf="@id/container"
+            app:layout_constraintTop_toTopOf="@id/container">
 
             <ProgressBar
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
