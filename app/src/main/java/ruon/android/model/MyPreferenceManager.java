@@ -14,6 +14,7 @@ public class MyPreferenceManager {
     public static final String FCM_TOKEN = "fcm_token";
     public static final String REGISTERED_ON_SERVER = "REGISTERED_ON_SERVER";
 
+    private static final String SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE = "shouldShowRequestPermissionRationale";
 
     public static void saveToken(Context context, String token){
         SharedPreferences.Editor editor = getEditor(context);
@@ -50,6 +51,16 @@ public class MyPreferenceManager {
             sPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         }
         return sPrefs;
+    }
+
+    public static boolean shouldShowNotificationPermissionRational(Context context) {
+        return getPrefs(context).getBoolean(SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, false);
+    }
+
+    public static void setShouldShowNotificationPermissionRational(Context context, boolean state) {
+        SharedPreferences.Editor editor = getEditor(context);
+        editor.putBoolean(SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE, state);
+        editor.commit();
     }
 
     private static SharedPreferences.Editor getEditor(Context context){

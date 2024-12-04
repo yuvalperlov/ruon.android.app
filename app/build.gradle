@@ -1,16 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
     namespace 'com.ruon.app'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.ruon.app"
         minSdk 19
-        targetSdk 34
+        targetSdk 35
         versionCode 301
         versionName "3.0.1"
         multiDexEnabled true
@@ -34,6 +35,9 @@ android {
         viewBinding true
         buildConfig true
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
@@ -51,6 +55,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
