@@ -9,12 +9,12 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    namespace 'com.ruon.app'
+    namespace 'com.ruon2.app'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.ruon.app"
-        minSdk 19
+        applicationId "com.ruon2.app"
+        minSdk 25
         targetSdk 35
         versionCode 301
         versionName "3.0.1"

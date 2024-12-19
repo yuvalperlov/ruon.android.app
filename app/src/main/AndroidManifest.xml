@@ -8,9 +8,9 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
-    <permission android:name="com.ruon.app.gcm.permission.C2D_MESSAGE"
+    <permission android:name="com.ruon2.app.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.ruon.app.gcm.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.ruon2.app.gcm.permission.C2D_MESSAGE" />
 
 
     <application
@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="ruon.android.activities.LoginActivity"
+            android:name="com.ruon2.android.activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
@@ -29,18 +29,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ruon.android.activities.MainActivity"
+            android:name="com.ruon2.android.activities.MainActivity"
             android:screenOrientation="portrait"
             android:label="@string/alarms_title" >
         </activity>
         <activity
-            android:name="ruon.android.activities.AlarmDetailsActivity"
+            android:name="com.ruon2.android.activities.AlarmDetailsActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
 
         <service
-            android:name="ruon.android.services.RUOnMessagingService"
+            android:name="com.ruon2.android.services.RUOnMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
