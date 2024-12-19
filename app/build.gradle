@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.ruon.app"
-        minSdk 19
+        minSdk 25
         targetSdk 35
         versionCode 301
         versionName "3.0.1"
